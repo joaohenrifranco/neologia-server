@@ -1,6 +1,6 @@
 import * as WebSocket from 'ws';
 
-import * as EventHandler from './event-handler';
+import * as EventHandler from './event';
 
 export type Message = {
   requestId: number,
@@ -12,7 +12,7 @@ function isMessageValid(message: object): message is Message {
   return true;
 }
 
-function getResponseMessage(rawMessage: string): Message {
+export function getResponseMessage(rawMessage: string): Message {
   try {
     const message = JSON.parse(rawMessage);
 
@@ -48,9 +48,4 @@ export function sendMessage(requestId: number, event: EventHandler.EventPayload,
   const rawMessage = JSON.stringify(message)
   
   ws.send(rawMessage);
-}
-
-export function handleRawMessage(rawMessage: string, ws: WebSocket) {
-  const response: Message = getResponseMessage(rawMessage);
-  ws.send(JSON.stringify(response));
 }

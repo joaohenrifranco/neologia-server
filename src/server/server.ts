@@ -1,9 +1,7 @@
 import * as WebSocket from 'ws';
 
-import * as MessageHandler from './message-handler';
+import * as ConnectionManager from './managers/connection';
 
-const wss = new WebSocket.Server({ port: 8080 })
+const wss = new WebSocket.Server({ port: 8080 });
 
-wss.on('connection', (ws: WebSocket) => {
-  ws.on('message', (message: string, ws: WebSocket) => MessageHandler.handleRawMessage(message, ws));
-})
+wss.on('connection', ConnectionManager.handleConnection);
