@@ -2,7 +2,7 @@
 import * as WebSocket from 'ws';
 import * as EventHandler from './event';
 
-// Memory store
+// Connection store
 
 let connectionCount = 0;
 const connections: { [key: string]: WebSocket } = {};
@@ -13,41 +13,46 @@ function generateConnectionId() {
 
 // Types
 
-type GameMessage = {
+type ClientMessage = {
   requestId: number,
-  isResponse: boolean,
-  event: EventHandler.EventPayload,
+  event: EventHandler.ClientEvent,
 }
 
-function isMessageValid(message: object): message is GameMessage {
-  return true;
+type ServerMessage = {
+  requestId: number,
+  event: EventHandler.ServerEvent,
+}
+
+function isClientMessageValid(message: any): message is ClientMessage {
+  return (
+    message &&
+    typeof message.requestId === "number" &&
+    EventHandler.isClientEventValid(message.event)
+  )
 }
 
 // Internal Handlers
 
 function handleMessage(rawMessage: string) {
-  let response: GameMessage;
+  let response: ServerMessage;
 
   try {
     const message = JSON.parse(rawMessage);
 
-    if (!isMessageValid(message)) {
+    if (!isClientMessageValid(message)) {
       response = {
         requestId: message.requestId || null,
-        isResponse: true,
         event: EventHandler.getBadSchemaEventPayload()
       }
     }
 
     response = {
       requestId: message.requestId,
-      isResponse: true,
       event: EventHandler.handleEvent(message.event),
     }
   } catch {
     response = {
       requestId: null,
-      isResponse: true,
       event: EventHandler.getParseFailedEventPayload()
     }
   }
@@ -78,7 +83,7 @@ export function handleConnection(ws: WebSocket) {
 
 export function sendMessage(
   connectionId: number,
-  event: EventHandler.EventPayload,
+  event: EventHandler.ServerEvent,
   requestId: number
 ) {
   const message = {
