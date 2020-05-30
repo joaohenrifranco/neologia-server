@@ -1,12 +1,18 @@
-type Props = {
-  id: number,
-  name: string,
+export function createPlayer(data) {
+
 }
 
-export class Player {
-  constructor(props: Props) {
-    for (let key in props) {
-      this[key] = props[key];
-    }
-  }
+export function logIn(data:) {
+
+}
+
+export function startGame() {
+
+}
+
+export function answer() {
+}
+
+export function getStatus() {
+
 }
