@@ -42,7 +42,7 @@ function handleMessage(rawMessage: string) {
     if (!isClientMessageValid(message)) {
       response = {
         requestId: message.requestId || null,
-        event: EventHandler.getBadSchemaEventPayload()
+        event: EventHandler.getBadSchemaEvent()
       }
     }
 
@@ -53,7 +53,7 @@ function handleMessage(rawMessage: string) {
   } catch {
     response = {
       requestId: null,
-      event: EventHandler.getParseFailedEventPayload()
+      event: EventHandler.getParseFailedEvent()
     }
   }
 
