@@ -1,6 +1,6 @@
 import * as WebSocket from 'ws';
 
-import * as ConnectionManager from './managers/connection';
+import * as ConnectionManager from './connection';
 
 const wss = new WebSocket.Server({ port: 8080 });
 
