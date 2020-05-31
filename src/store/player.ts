@@ -1,15 +1,24 @@
 export type Player = {
-  playerIds: Set<number>,
-  stage: string,
+  name: string,
+  token: string,
+  connectionId?: number,
 }
 
-let players: { [key: string]: Player } = {};
+let players: Array<Player> = [];
 
-export function upsertPlayer(playerId: number, player: Player) {
-  players[playerId] = player;
-  return player;
+export function upsert(player: Player, existingId?: number): number {
+  const playerCopy = {...player};
+
+  if (typeof existingId === "number") {
+    players[existingId] = playerCopy;
+    return existingId;
+  }
+  
+  players.push(playerCopy);
+
+  return players.length - 1;
 }
 
-export function player(playerId: number) {
+export function find(playerId: number) {
   return { ...players[playerId] };
 }

@@ -1,15 +1,24 @@
 export type Room = {
+  name: string,
   playerIds: Set<number>,
   stage: string,
 }
 
-let rooms: { [key: string]: Room } = {};
+let rooms: Array<Room> = [];
 
-export function upsertRoom(roomId: number, room: Room) {
-  rooms[roomId] = room;
-  return room;
+export function upsert(room: Room, existingId?: number): number {
+  const roomCopy = {...room};
+
+  if (typeof existingId === "number") {
+    rooms[existingId] = roomCopy;
+    return existingId;
+  }
+  
+  rooms.push(roomCopy);
+
+  return rooms.length - 1;
 }
 
-export function findRoom(roomId: number) {
+export function find(roomId: number) {
   return { ...rooms[roomId] };
 }
