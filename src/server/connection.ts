@@ -33,7 +33,7 @@ function isClientMessageValid(message: any): message is ClientMessage {
 
 // Internal Handlers
 
-function handleMessage(rawMessage: string) {
+function handleMessage(rawMessage: string, connectionId: number) {
   let response: ServerMessage;
 
   try {
@@ -48,7 +48,7 @@ function handleMessage(rawMessage: string) {
 
     response = {
       requestId: message.requestId,
-      event: EventHandler.handleEvent(message.event),
+      event: EventHandler.handleEvent(message.event, connectionId),
     }
   } catch {
     response = {
@@ -71,12 +71,12 @@ function handleError(id: number) {
 // Server interface
 
 export function handleConnection(ws: WebSocket) {
-  const id = generateConnectionId();
-  connections[id] = ws;
+  const connectionId = generateConnectionId();
+  connections[connectionId] = ws;
 
-  ws.on('message', (message: string) => handleMessage(message));
-  ws.on('close', (event: CloseEvent) => handleClose(id));
-  ws.on('error', (event: ErrorEvent) => handleError(id));
+  ws.on('message', (message: string) => handleMessage(message, connectionId));
+  ws.on('close', (event: CloseEvent) => handleClose(connectionId));
+  ws.on('error', (event: ErrorEvent) => handleError(connectionId));
 }
 
 // Application interface

@@ -1,4 +1,4 @@
-import * as PlayerModel from '../../models/player';
+import * as PlayerModel from '../game/player';
 
 enum ServerErrorEventNames {
   badSchema = 'ERROR_BAD_SCHEMA',
@@ -23,11 +23,9 @@ enum ClientEventNames {
   vote = 'VOTE',
 };
 
-type EventData = any; // TODO: specify that
-
 export type ClientEvent = {
   name: ClientEventNames,
-  data?: EventData,
+  payload?: object,
 }
 
 type ServerEventName = (
@@ -38,7 +36,7 @@ type ServerEventName = (
 
 export type ServerEvent = {
   name: ServerEventName,
-  data?: object,
+  payload?: object,
 }
 
 export function isClientEventValid(event: any): event is ClientEvent {
@@ -59,62 +57,49 @@ function getInvalidEventNameEvent(): ServerEvent {
 }
 
 function getHandlerErrorEvent(error: Error): ServerEvent {
-  return { name: ServerErrorEventNames.invalidEventName, data: error };
+  return { name: ServerErrorEventNames.invalidEventName, payload: error };
 }
 
-function getResponseEvent(incomingEventName: ClientEventNames, responseData: EventData) {
-  return { name: incomingEventName, data: responseData }
+function getResponseEvent(
+  incomingEventName: ClientEventNames,
+  responsePayload: object
+  ): ServerEvent {
+    return { name: incomingEventName, payload: responsePayload }
 }
 
-export function handleEvent(incomingEvent: ClientEvent): ServerEvent {
-  const incomingData = incomingEvent.data
-  let responseData: EventData;
+export function handleEvent(incomingEvent: ClientEvent, connectionId: number): ServerEvent {
+  const incomingPayload = incomingEvent.payload
+
+  let responsePayload;
 
   try {
     switch (incomingEvent.name) {
-
       case ClientEventNames.createPlayer:
-        const { roomId, playerName } = incomingData;
-        if (typeof roomId !== "number" || typeof playerName !== "string") {
-          return getBadSchemaEvent();
-        }
-        responseData = PlayerModel.createPlayer(roomId, playerName);
+        responsePayload = PlayerModel.createPlayer(incomingPayload, connectionId);
         break;
 
       case ClientEventNames.logIn:
-        const { token } = incomingData;
-        if (typeof token !== "string") {
-          return getBadSchemaEvent();
-        }
-        responseData = PlayerModel.logIn(token);
+        responsePayload = PlayerModel.logIn(incomingPayload, connectionId);
         break;
 
       case ClientEventNames.startGame:
-        responseData = PlayerModel.startGame();
+        responsePayload = PlayerModel.startGame(connectionId);
         break;
 
       case ClientEventNames.answer:
-        const { answer, stage } = incomingData;
-        if (typeof answer !== "string" || typeof stage !== "string") {
-          return getBadSchemaEvent();
-        }
-        responseData = PlayerModel.answer(answer, stage);
+        responsePayload = PlayerModel.answer(incomingPayload, connectionId);
         break;
 
       case ClientEventNames.vote:
-        const { orderedVotes, stage } = incomingData;
-        if (typeof orderedVotes !== "array" || typeof stage !== "string") {
-          return getBadSchemaEvent();
-        }
-        responseData = PlayerModel.answer(orderedVotes, stage);
+        responsePayload = PlayerModel.answer(incomingPayload, connectionId);
         break;
 
       default:
         return getInvalidEventNameEvent();
     }
-  } catch (e) {
-    return getHandlerErrorEvent(e);
+  } catch (error) {
+    return getHandlerErrorEvent(error);
   }
 
-  return getResponseEvent(incomingEvent.name, responseData);
+  return getResponseEvent(incomingEvent.name, responsePayload);
 }
