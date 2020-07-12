@@ -1,3 +1,5 @@
+// We don't need to persist data right now
+
 export type Room = {
   id: number,
   name: string,

@@ -3,6 +3,7 @@ export enum ServerErrorEventNames {
   parseFailed = 'ERROR_PARSE_FAILED',
   invalidEventName = 'ERROR_INVALID_EVENT_NAME',
   handlerError = 'ERROR_HANDLER',
+  internalError = 'INTERNAL_ERROR'
 }
 export enum ServerGameEventNames {
   youAreHost = 'YOU_ARE_HOST',
@@ -22,7 +23,7 @@ export enum ClientEventNames {
 
 export type ClientEvent = {
   name: ClientEventNames;
-  payload?: object;
+  payload?: any;
 };
 
 export type ServerEventName =

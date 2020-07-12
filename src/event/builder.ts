@@ -13,7 +13,7 @@ export function invalidEventNameEvent(): ServerEvent {
 }
 
 export function handlerErrorEvent(error: Error): ServerEvent {
-  return { name: ServerErrorEventNames.invalidEventName, payload: error };
+  return { name: ServerErrorEventNames.internalError, payload: error };
 }
 
 export function responseEvent(

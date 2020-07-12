@@ -61,7 +61,7 @@ function handleMessage(rawMessage: string, connectionId: number) {
     };
   }
 
-  this.send(JSON.stringify(response));
+  connections[connectionId].send(JSON.stringify(response));
 }
 
 function handleClose(id: number) {
