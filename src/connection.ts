@@ -1,6 +1,10 @@
-
 import * as WebSocket from 'ws';
-import * as EventHandler from './event';
+
+import * as Dispatcher from './event/dispatcher';
+import * as EventBuilder from './event/builder';
+import * as EventValidator from './event/validator';
+
+import { ServerEvent, ClientEvent } from './event/type';
 
 // Connection store
 
@@ -14,21 +18,21 @@ function generateConnectionId() {
 // Types
 
 type ClientMessage = {
-  requestId: number,
-  event: EventHandler.ClientEvent,
-}
+  requestId: number;
+  event: ClientEvent;
+};
 
 type ServerMessage = {
-  requestId: number,
-  event: EventHandler.ServerEvent,
-}
+  requestId: number;
+  event: ServerEvent;
+};
 
 function isClientMessageValid(message: any): message is ClientMessage {
   return (
     message &&
-    typeof message.requestId === "number" &&
-    EventHandler.isClientEventValid(message.event)
-  )
+    typeof message.requestId === 'number' &&
+    EventValidator.isClientEventValid(message.event)
+  );
 }
 
 // Internal Handlers
@@ -42,19 +46,19 @@ function handleMessage(rawMessage: string, connectionId: number) {
     if (!isClientMessageValid(message)) {
       response = {
         requestId: message.requestId || null,
-        event: EventHandler.getBadSchemaEvent()
-      }
+        event: EventBuilder.badSchemaEvent(),
+      };
     }
 
     response = {
       requestId: message.requestId,
-      event: EventHandler.handleEvent(message.event, connectionId),
-    }
+      event: Dispatcher.handleEvent(message.event, connectionId),
+    };
   } catch {
     response = {
       requestId: null,
-      event: EventHandler.getParseFailedEvent()
-    }
+      event: EventBuilder.parseFailedEvent(),
+    };
   }
 
   this.send(JSON.stringify(response));
@@ -81,23 +85,19 @@ export function handleConnection(ws: WebSocket) {
 
 // Application interface
 
-export function sendMessage(
-  connectionId: number,
-  event: EventHandler.ServerEvent,
-  requestId: number
-) {
+export function sendMessage(connectionId: number, event: ServerEvent, requestId: number) {
   const message = {
     requestId,
     isResponse: false,
-    event
-  }
+    event,
+  };
 
   const serializedMessage = JSON.stringify(message);
 
   const ws = connections[connectionId];
 
   if (!ws) {
-    throw new Error("ConnectionIdNotFound");
+    throw new Error('ConnectionIdNotFound');
   }
 
   ws.send(serializedMessage);

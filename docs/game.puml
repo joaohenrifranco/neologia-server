@@ -1,0 +1,14 @@
+@startuml game
+
+class Room
+class Game
+class Player
+
+Room : create()
+Room : addPlayer()
+Room : getStatus()
+
+Player : create()
+Player : logIn()
+
+@enduml

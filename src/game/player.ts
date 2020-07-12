@@ -3,16 +3,11 @@ import * as RoomModel from './room';
 
 // Types
 
+type Player = PlayerStore.Player;
+
 export type Payload = any;
 
-export type PlayerType = {
-  // id: number,
-  name: string,
-  token: string,
-  connectionId: number,
-}
-
-// Private methods
+// Private functions
 
 function generateToken() {
   function random5charString() {
@@ -21,22 +16,24 @@ function generateToken() {
   return `${random5charString()}${random5charString()}`
 }
 
-// Public methods
+// Public functions
 
 export function createPlayer(payload: Payload, connectionId: number) {
   const { roomId, playerName } = payload;
-  
+
   if (typeof roomId !== "number" || typeof playerName !== "string") {
     throw new Error("CREATE_PLAYER_BAD_DATA")
   }
 
-  const token = generateToken();
-  const playerId = PlayerStore.insert({name: playerName, token, connectionId});
+  const player = {
+    name: playerName,
+    token: generateToken(),
+    connectionId
+  }
 
-  const 
+  const playerId = PlayerStore.upsert(player);
 
-  
-
+  return player.token;
 }
 
 export function logIn(payload: Payload) {

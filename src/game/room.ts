@@ -9,18 +9,21 @@ export enum ReturnCodes {
   roomIsFull = "ROOM_IS_FULL",
 }
 
-function newRoom(): Room {
+function newRoom(name: string): Room {
   return {
+
+    name,
     playerIds: new Set(),
     stage: 'LOBBY',
   }
 }
 
-export function addPlayerToRoom(playerId: number, roomId: number): ReturnCodes {
-  let room: Room = RoomStore.findRoom(roomId);
+export function addPlayerToRoom(playerId: number, roomName: string): ReturnCodes {
+  let room: Room = RoomStore.findByName(roomName);
 
   if (!room) {
-    room = RoomStore.upsertRoom(roomId, newRoom());
+    room = newRoom(roomName);
+    roomId = RoomStore.upsert(room);
   }
 
   if (room.playerIds.size >= MAX_PLAYERS_PER_ROOM) {

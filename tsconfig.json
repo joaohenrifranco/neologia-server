@@ -8,5 +8,5 @@
       "sourceMap": true,
       "lib": ["dom", "es7"]
     },
-    "files": ["src/server/server.ts"]
+    "files": ["src/server.ts"]
   }
