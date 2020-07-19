@@ -1,4 +1,4 @@
-import * as PlayerStore from '../store/player';
+import * as PlayerStore from 'store/player';
 import * as RoomModel from './room';
 
 // Types
