@@ -6,7 +6,8 @@
       "removeComments": true,
       "preserveConstEnums": true,
       "sourceMap": true,
-      "lib": ["dom", "es7"]
+      "lib": ["dom", "es7"],
+      "baseUrl": "src"
     },
     "files": ["src/server.ts"]
   }
