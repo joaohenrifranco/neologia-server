@@ -16,6 +16,7 @@ export enum ServerGameEventNames {
 export enum ClientEventNames {
   createPlayer = 'CREATE_PLAYER',
   logIn = 'LOG_IN',
+  enterRoom = 'ENTER_ROOM',
   startGame = 'START_GAME',
   answer = 'ANSWER',
   vote = 'VOTE',
