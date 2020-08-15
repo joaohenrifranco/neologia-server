@@ -1,4 +1,4 @@
-import { ServerEvent, ClientEventNames, ServerErrorEventNames } from './type';
+import { ServerEvent, ServerErrorEventNames, ServerEventName } from './types';
 
 export function badSchemaEvent(): ServerEvent {
   return { name: ServerErrorEventNames.badSchema };
@@ -16,8 +16,12 @@ export function handlerErrorEvent(error: Error): ServerEvent {
   return { name: ServerErrorEventNames.internalError, payload: error };
 }
 
+export function noOp(): ServerEvent {
+  return { name: ServerErrorEventNames.notImplemented, payload: { warn: 'Not implemented' } };
+}
+
 export function responseEvent(
-  incomingEventName: ClientEventNames,
+  incomingEventName: ServerEventName,
   responsePayload: object
 ): ServerEvent {
   return { name: incomingEventName, payload: responsePayload };

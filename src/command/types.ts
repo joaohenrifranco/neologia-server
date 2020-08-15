@@ -3,7 +3,8 @@ export enum ServerErrorEventNames {
   parseFailed = 'ERROR_PARSE_FAILED',
   invalidEventName = 'ERROR_INVALID_EVENT_NAME',
   handlerError = 'ERROR_HANDLER',
-  internalError = 'INTERNAL_ERROR'
+  internalError = 'INTERNAL_ERROR',
+  notImplemented = 'NOT_IMPLEMENTED',
 }
 export enum ServerGameEventNames {
   youAreHost = 'YOU_ARE_HOST',
@@ -13,7 +14,7 @@ export enum ServerGameEventNames {
   gameOver = 'GAME_OVER',
 }
 
-export enum ClientEventNames {
+export enum CommandNames {
   createPlayer = 'CREATE_PLAYER',
   logIn = 'LOG_IN',
   enterRoom = 'ENTER_ROOM',
@@ -22,15 +23,12 @@ export enum ClientEventNames {
   vote = 'VOTE',
 }
 
-export type ClientEvent = {
-  name: ClientEventNames;
-  payload?: any;
+export type Command = {
+  name: CommandNames;
+  payload?: object;
 };
 
-export type ServerEventName =
-  | ServerErrorEventNames
-  | ServerGameEventNames
-  | ClientEventNames; // Client event names are sent back in responses
+export type ServerEventName = ServerErrorEventNames | ServerGameEventNames;
 
 export type ServerEvent = {
   name: ServerEventName;
