@@ -1,4 +1,4 @@
-import { ServerEvent, Command } from '../command/types';
+import { Event, Command } from '../dispatcher/types';
 
 export type ClientMessage = {
   requestId: number;
@@ -7,5 +7,5 @@ export type ClientMessage = {
 
 export type ServerMessage = {
   requestId?: number;
-  event: ServerEvent;
+  event: Event;
 };

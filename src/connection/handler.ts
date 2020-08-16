@@ -4,10 +4,10 @@ import * as ConnectionValidators from './validators';
 import * as ConnectionStore from './store';
 import { ServerMessage, ClientMessage } from './types';
 
-import * as Dispatcher from '../command/dispatcher';
-import { ServerEvent } from '../command/types';
+import Dispatcher from '../dispatcher/dispatcher';
+import { Event } from '../dispatcher/types';
 
-function buildServerMessage(requestId: number, event: ServerEvent): ServerMessage {
+function buildServerMessage(requestId: number, event: Event): ServerMessage {
   return { requestId, event };
 }
 
@@ -35,9 +35,8 @@ function parseMessage(rawMessage: string): ClientMessage | undefined {
 
 function handleMessage(rawMessage: string, connectionId: number) {
   const clientMessage = parseMessage(rawMessage);
-  // TODO: Auth here
-  const serverEvent = Dispatcher.dispatchCommand(clientMessage.command);
-  const responseMessage = buildServerMessage(clientMessage.requestId, serverEvent);
+  const Event = Dispatcher.dispatchCommand(clientMessage.command, connectionId);
+  const responseMessage = buildServerMessage(clientMessage.requestId, Event);
 
   sendMessage(connectionId, responseMessage);
 }

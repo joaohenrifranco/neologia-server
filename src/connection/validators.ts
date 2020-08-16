@@ -1,5 +1,5 @@
 import { ClientMessage } from './types';
-import * as CommandValidators from '../command/validators';
+import * as CommandValidators from '../dispatcher/validators';
 
 function isClientMessageValid(message: any): message is ClientMessage {
   return (

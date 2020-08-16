@@ -1,12 +1,17 @@
-export enum ServerErrorEventNames {
+export enum ExceptionEventNames {
   badSchema = 'ERROR_BAD_SCHEMA',
   parseFailed = 'ERROR_PARSE_FAILED',
   invalidEventName = 'ERROR_INVALID_EVENT_NAME',
-  handlerError = 'ERROR_HANDLER',
   internalError = 'INTERNAL_ERROR',
-  notImplemented = 'NOT_IMPLEMENTED',
+  loggedOut = 'LOGGED_OUT',
 }
-export enum ServerGameEventNames {
+
+export enum ResponseEventNames {
+  success = 'SUCCESS',
+  fail = 'FAIL',
+}
+
+export enum GameEventNames {
   youAreHost = 'YOU_ARE_HOST',
   updateAllPlayers = 'UPDATE_ALL_PLAYERS',
   updateStage = 'UPDATE_STAGE',
@@ -14,23 +19,30 @@ export enum ServerGameEventNames {
   gameOver = 'GAME_OVER',
 }
 
-export enum CommandNames {
+export type EventName = ResponseEventNames | ExceptionEventNames | GameEventNames;
+
+export type Event = {
+  name: EventName;
+  payload?: object;
+};
+
+export enum AccountCommandNames {
   createPlayer = 'CREATE_PLAYER',
   logIn = 'LOG_IN',
+}
+
+export enum GameCommandNames {
   enterRoom = 'ENTER_ROOM',
   startGame = 'START_GAME',
   answer = 'ANSWER',
   vote = 'VOTE',
 }
 
+export type CommandName = GameCommandNames | AccountCommandNames;
+
 export type Command = {
-  name: CommandNames;
+  name: CommandName;
   payload?: object;
 };
 
-export type ServerEventName = ServerErrorEventNames | ServerGameEventNames;
 
-export type ServerEvent = {
-  name: ServerEventName;
-  payload?: object;
-};
