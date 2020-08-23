@@ -1,4 +1,4 @@
-import * as RoomStore from 'store/room';
+import * as RoomStore from '../store/room';
 
 type Room = RoomStore.Room;
 

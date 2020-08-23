@@ -28,15 +28,15 @@ function parseMessage(rawMessage: string): ClientMessage | undefined {
       return undefined;
     }
     return message;
-  } catch {
+  } catch(e) {
     return undefined;
   }
 }
 
 function handleMessage(rawMessage: string, connectionId: number) {
   const clientMessage = parseMessage(rawMessage);
-  const Event = Dispatcher.dispatchCommand(clientMessage.command, connectionId);
-  const responseMessage = buildServerMessage(clientMessage.requestId, Event);
+  const Event = Dispatcher.dispatchCommand(clientMessage?.command, connectionId);
+  const responseMessage = buildServerMessage(clientMessage?.requestId, Event);
 
   sendMessage(connectionId, responseMessage);
 }
