@@ -1,0 +1,2 @@
+{ "requestId": 1, "command": { "name": "CREATE_PLAYER", "payload": { "playerName": "john" } } }
+
