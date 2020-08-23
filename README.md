@@ -1,6 +1,6 @@
 # Neologia Server
 
-<<WIP>>
+> WIP
 
 ## Directory structure
 
